@@ -1,0 +1,35 @@
+//
+//  DeviceListView.swift
+//  ac
+//
+//  Created by Giovanni Maya on 6/26/25.
+//
+
+import SwiftUI
+
+struct DeviceListView: View {
+    @ObservedObject var bleVM: BLEViewModel
+
+    var body: some View {
+        VStack {
+            Text("Nearby Doors").font(.title)
+
+            List(bleVM.discoveredDevices) { device in
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(device.name)
+                        Text(device.peripheral.identifier.uuidString).font(.caption)
+                    }
+                    Spacer()
+                    Button("Request Access") {
+                        bleVM.connectToDevice(device)
+                    }
+                    Button("Open Door") {
+                        bleVM.sendUnlockCommand()
+                    }
+                    .disabled(bleVM.unlockCharacteristic == nil)
+                }
+            }
+        }
+    }
+}
