@@ -14,7 +14,17 @@ struct DeviceListView: View {
         VStack {
             Text("Nearby Doors").font(.title)
 
-            List(bleVM.discoveredDevices) { device in
+            if bleVM.isScanning {
+                ProgressView("Scanning for devices...")
+                    .padding()
+            }
+
+            if bleVM.discoveredDevices.isEmpty && !bleVM.isScanning {
+                Text("No devices found.")
+                    .foregroundColor(.secondary)
+            }
+
+            List(bleVM.discoveredDevices.filter { $0.name != "Unknown" }) { device in
                 HStack {
                     VStack(alignment: .leading) {
                         Text(device.name)
@@ -30,6 +40,9 @@ struct DeviceListView: View {
                     .disabled(bleVM.unlockCharacteristic == nil)
                 }
             }
+        }
+        .onAppear {
+            bleVM.startScan()
         }
     }
 }
