@@ -33,9 +33,11 @@ struct DeviceListView: View {
                     Spacer()
                     Button("Request Access") {
                         bleVM.connectToDevice(device)
+                        
                     }
                     Button("Open Door") {
-                        bleVM.sendUnlockCommand()
+                        bleVM.sendData("OPEN_DOOR")
+                        bleVM.sendData("CLOSE_DOOR")
                     }
                     .disabled(bleVM.unlockCharacteristic == nil)
                 }

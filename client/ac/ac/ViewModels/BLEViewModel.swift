@@ -17,9 +17,9 @@ class BLEViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeri
     private var targetPeripheral: CBPeripheral?
     var unlockCharacteristic: CBCharacteristic?
 
-    let SERVICE_UUID = CBUUID(string: "12345678-1234-1234-1234-123456789abc")
-    let CHARACTERISTIC_UUID = CBUUID(string: "abcd1234-5678-90ab-cdef-1234567890ab")
-
+    let SERVICE_UUID = CBUUID(string: "19B10000-E8F2-537E-4F6C-D104768A1214")
+    let CHARACTERISTIC_UUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
+    
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
@@ -123,5 +123,20 @@ class BLEViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeri
         targetPeripheral?.writeValue(data, for: characteristic, type: .withResponse)
         isUnlocked = true
         print("Sent unlock command.")
+    }
+    
+    func sendData(_ message: String) {
+        guard let characteristic = unlockCharacteristic else {
+            print("❌ No writable characteristic available.")
+            return
+        }
+
+        guard let data = message.data(using: .utf8) else {
+            print("❌ Couldn't convert message to data.")
+            return
+        }
+
+        targetPeripheral?.writeValue(data, for: characteristic, type: .withResponse)
+        print("✅ Sent message: \(message)")
     }
 }
