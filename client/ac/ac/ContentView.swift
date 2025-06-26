@@ -20,6 +20,10 @@ struct ContentView: View {
             } else {
                 LockScreenView(authVM: authVM)
             }
+        }.onChange(of: authVM.isAuthenticated) {
+            if authVM.isAuthenticated {
+                bleVM.startScan()
+            }
         }
     }
 }
