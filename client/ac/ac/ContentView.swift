@@ -9,11 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var authVM = AuthViewModel()
+    @StateObject private var bleVM = BLEViewModel()
 
     var body: some View {
         Group {
             if authVM.isAuthenticated {
-                Text("You're authenticated!")
+                DeviceListView(bleVM: bleVM)
             } else if authVM.showPinFallback {
                 PinFallbackView(authVM: authVM)
             } else {
