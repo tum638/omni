@@ -11,6 +11,10 @@ import Foundation
 class AuthViewModel: ObservableObject {
     @Published var isAuthenticated = false
     @Published var showAuthFailedAlert = false
+    @Published var showPinFallback = false
+    @Published var showInvalidPinAlert = false
+    
+    private let correctPin = "1234"
 
     func authenticate() {
         let context = LAContext()
@@ -26,6 +30,7 @@ class AuthViewModel: ObservableObject {
                         self.isAuthenticated = true
                     } else {
                         self.showAuthFailedAlert = true
+                        self.showPinFallback = true
                     }
                 }
             }
@@ -36,4 +41,12 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
+    
+    func verifyPin(_ enteredPin: String) {
+            if enteredPin == correctPin {
+                isAuthenticated = true
+            } else {
+                showInvalidPinAlert = true
+            }
+        }
 }
