@@ -11,17 +11,24 @@ authorized_pairs = {
 }
 @router.post("/verify-access", response_model=AccessResponse)
 async def verify_access(request: AccessRequest):
-    if (request.client_id, request.device_id) in authorized_pairs:
+    client_id = request.client_id
+    device_id = request.device_id
+
+    if (client_id, device_id) in authorized_pairs:
         message = "Access granted"
-        if manager.is_connected(request.client_id):
-            await manager.send_to(request.client_id, "granted")
+        # Send to iOS via WebSocket if connected
+        if manager.is_connected(client_id):
+            await manager.send_to(client_id, "access_granted")
+
         return AccessResponse(access="granted", message=message)
 
-    # Access denied
-    if manager.is_connected(request.client_id):
-        await manager.send_to(request.client_id, "denied")
+    # Not authorized
+    if manager.is_connected(client_id):
+        await manager.send_to(client_id, "access_denied")
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Access denied"
     )
+
+

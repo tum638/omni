@@ -9,14 +9,19 @@ import SwiftUI
 
 struct DeviceListView: View {
     @ObservedObject var bleVM: BLEViewModel
+    @StateObject private var viewModel = SocketViewModel(clientId: "abc124")
 
     var body: some View {
         VStack {
             Text("Nearby Doors").font(.title)
-
+            
             if bleVM.isScanning {
+                
                 ProgressView("Scanning for devices...")
                     .padding()
+                    .task {
+                        viewModel.connect()
+                    }
             }
 
             if bleVM.discoveredDevices.isEmpty && !bleVM.isScanning {
@@ -32,8 +37,8 @@ struct DeviceListView: View {
                     }
                     Spacer()
                     Button("Request Access") {
-                        bleVM.connectToDevice(device)
                         
+                        bleVM.connectToDevice(device)
                     }
                     Button("Open Door") {
                         bleVM.sendData(clientID: "abc124", deviceID: "door1")
@@ -44,6 +49,9 @@ struct DeviceListView: View {
         }
         .onAppear {
             bleVM.startScan()
+        }
+        .onDisappear {
+            viewModel.disconnect()
         }
     }
 }
