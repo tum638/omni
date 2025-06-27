@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DeviceListView: View {
     @ObservedObject var bleVM: BLEViewModel
-    @StateObject private var viewModel = SocketViewModel(clientId: "abc124")
+    @StateObject private var viewModel = SocketViewModel(clientId: "abc123")
 
     var body: some View {
         ScrollView{
@@ -82,7 +82,7 @@ struct DeviceListView: View {
                                     .buttonStyle(.plain)
 
                                     Button(action: {
-                                        bleVM.sendData(clientID: "abc124", deviceID: "door1")
+                                        bleVM.sendData(clientID: "abc123", deviceID: "door1")
                                     }) {
                                         Image(systemName: "hand.wave.fill")
                                             .resizable()

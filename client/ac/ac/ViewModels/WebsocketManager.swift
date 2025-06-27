@@ -14,7 +14,7 @@ class WebsocketManager: ObservableObject {
     var onMessage: ((String) -> Void)?
     
     init(clientId: String) {
-        let urlString = "ws://172.20.10.6:8000/ws/client/\(clientId)"
+        let urlString = "ws://172.20.10.3:8000/ws/client/\(clientId)"
         self.url = URL(string: urlString)!
     }
     

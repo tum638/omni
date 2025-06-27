@@ -15,7 +15,7 @@ String deviceId = "";
 String wifiSSID = "4466784";
 String wifiPASS = "tanatswa";
 
-char serverAddress[] = "172.20.10.2";
+char serverAddress[] = "172.20.10.3";
 int serverPort = 8000;
 
 WiFiClient wifiClient;
