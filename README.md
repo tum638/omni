@@ -1,7 +1,11 @@
+![Mobile App] (assets/iPhone 16 - 4.svg)
+
 # Design Document: A More Accessible and Secure Access Control System
 
 ## 1. Overview
 Physical badges for building access present security and accessibility challenges. This project proposes a Bluetooth-based digital badge system that improves security, enhances accessibility, and enables smoother interaction with door systems through a smartphone application.
+
+![Mobile App](.assets/iPhone 16 - 4.svg)
 
 ## 2. Goals
 - Replace physical badges with Bluetooth-enabled digital badges  
@@ -10,8 +14,6 @@ Physical badges for building access present security and accessibility challenge
 - Demonstrate feasibility with a working prototype using Arduino, mobile app and web server (credential verification server)
 
 ## 3. User Flow
-- Employee opens the app on their smartphone  
-- Face ID / password is required to continue  
 - The app scans for nearby authorized receivers (BLE)  
 - Available doors are displayed in the app  
 - Employee selects a door to unlock  
