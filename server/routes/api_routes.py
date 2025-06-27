@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status 
 from models import AccessRequest, AccessResponse
 from connection_manager import manager
 
@@ -9,14 +9,19 @@ authorized_pairs = {
     ("abc123", "door1"),
     ("client456", "door2")
 }
-
 @router.post("/verify-access", response_model=AccessResponse)
 async def verify_access(request: AccessRequest):
-    access = "granted" if (request.client_id, request.device_id) in authorized_pairs else "denied"
-    message = "Access granted" if access == "granted" else "Access denied"
+    if (request.client_id, request.device_id) in authorized_pairs:
+        message = "Access granted"
+        if manager.is_connected(request.client_id):
+            await manager.send_to(request.client_id, "granted")
+        return AccessResponse(access="granted", message=message)
 
-    # Push response back to client if connected
+    # Access denied
     if manager.is_connected(request.client_id):
-        await manager.send_to(request.client_id, access)
+        await manager.send_to(request.client_id, "denied")
 
-    return AccessResponse(access=access, message=message)
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Access denied"
+    )

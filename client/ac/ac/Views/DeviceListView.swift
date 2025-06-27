@@ -36,8 +36,7 @@ struct DeviceListView: View {
                         
                     }
                     Button("Open Door") {
-                        bleVM.sendData("OPEN_DOOR")
-                        bleVM.sendData("CLOSE_DOOR")
+                        bleVM.sendData(clientID: "abc124", deviceID: "door1")
                     }
                     .disabled(bleVM.unlockCharacteristic == nil)
                 }
