@@ -7,7 +7,7 @@ Physical badges for building access present security and accessibility challenge
 - Replace physical badges with Bluetooth-enabled digital badges  
 - Enable secure credential-based authentication  
 - Enhance accessibility (no swiping, tapping, or holding cards)  
-- Demonstrate feasibility with a working prototype using Arduino and a web interface
+- Demonstrate feasibility with a working prototype using Arduino, mobile app and web server (credential verification server)
 
 ## 3. User Flow
 - Employee opens the app on their smartphone  
