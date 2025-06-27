@@ -1,4 +1,4 @@
-![Mobile App](uimock.svg)
+![Mobile App](assets/uimock.svg)
 
 # Design Document: A More Accessible and Secure Access Control System
 
