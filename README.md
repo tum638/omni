@@ -1,3 +1,5 @@
+![Mobile App] (assets/iPhone 16 - 4)
+
 # Design Document: A More Accessible and Secure Access Control System
 
 ## 1. Overview
@@ -10,8 +12,6 @@ Physical badges for building access present security and accessibility challenge
 - Demonstrate feasibility with a working prototype using Arduino, mobile app and web server (credential verification server)
 
 ## 3. User Flow
-- Employee opens the app on their smartphone  
-- Face ID / password is required to continue  
 - The app scans for nearby authorized receivers (BLE)  
 - Available doors are displayed in the app  
 - Employee selects a door to unlock  
