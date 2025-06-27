@@ -125,18 +125,25 @@ class BLEViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeri
         print("Sent unlock command.")
     }
     
-    func sendData(_ message: String) {
+    func sendData(clientID: String, deviceID: String) {
         guard let characteristic = unlockCharacteristic else {
             print("❌ No writable characteristic available.")
             return
         }
 
-        guard let data = message.data(using: .utf8) else {
-            print("❌ Couldn't convert message to data.")
+        let payload: [String: String] = [
+            "client_id": clientID,
+            "device_id": deviceID
+        ]
+
+        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
+              let jsonString = String(data: data, encoding: .utf8),
+              let finalData = jsonString.data(using: .utf8) else {
+            print("❌ Failed to create JSON string.")
             return
         }
 
-        targetPeripheral?.writeValue(data, for: characteristic, type: .withResponse)
-        print("✅ Sent message: \(message)")
+        targetPeripheral?.writeValue(finalData, for: characteristic, type: .withResponse)
+        print("✅ Sent message: \(jsonString)")
     }
 }
