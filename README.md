@@ -1,4 +1,4 @@
-![Mobile App] (assets/iPhone 16 - 4)
+![Mobile App](assets/iPhone 16 - 4)
 
 # Design Document: A More Accessible and Secure Access Control System
 
