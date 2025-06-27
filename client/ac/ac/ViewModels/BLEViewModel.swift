@@ -12,6 +12,7 @@ class BLEViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeri
     @Published var discoveredDevices: [DiscoveredDevice] = []
     @Published var isUnlocked = false
     @Published var isScanning = false
+    @Published var connectionAttempted = false
 
     private var centralManager: CBCentralManager!
     private var targetPeripheral: CBPeripheral?
@@ -76,6 +77,11 @@ class BLEViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeri
     // MARK: - Connection
 
     func connectToDevice(_ device: DiscoveredDevice) {
+        if let index = discoveredDevices.firstIndex(where: { $0.id == device.id }) {
+            discoveredDevices[index].connectionAttempted = true
+            discoveredDevices[index].isUnlocked = false
+        }
+
         targetPeripheral = device.peripheral
         targetPeripheral?.delegate = self
         centralManager.connect(device.peripheral, options: nil)
@@ -107,6 +113,11 @@ class BLEViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeri
             if $0.uuid == CHARACTERISTIC_UUID {
                 print("Unlock characteristic found.")
                 self.unlockCharacteristic = $0
+
+                // Mark unlocked on the specific device
+                if let index = discoveredDevices.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }) {
+                    discoveredDevices[index].isUnlocked = true
+                }
             }
         }
     }

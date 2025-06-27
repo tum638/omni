@@ -11,5 +11,7 @@ struct DiscoveredDevice: Identifiable {
     let id = UUID()
     let peripheral: CBPeripheral
     let name: String
+    
+    var connectionAttempted: Bool = false
+    var isUnlocked: Bool = false
 }
-
