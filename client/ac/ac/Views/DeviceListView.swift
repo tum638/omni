@@ -31,7 +31,10 @@ struct DeviceListView: View {
             .padding(.top, 16)
             VStack {
                 VStack(spacing: 12) {
-                        ForEach(bleVM.discoveredDevices.filter { $0.name != "Unknown" }) { device in
+                        ForEach(bleVM.discoveredDevices.filter { device in
+                            let lowercasedName = device.name.lowercased()
+                            return lowercasedName.contains("door") || lowercasedName.contains("arduino")
+                        }) { device in
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(device.name)
