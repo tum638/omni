@@ -41,24 +41,23 @@ The architecture includes a smartphone app communicating via BLE with an ESP32. 
 ## 7. Component Design
 
 **Smartphone App**  
-- Platform: Flutter or React Native  
+- Platform: Swift 
 - Features: Authentication, BLE scan, user-friendly UI, send credentials  
 
 **Arduino (ESP32)**  
 - Acts as BLE GATT server, receives and forwards credentials, shows debug status  
 
 **Web Server**  
-- Stack: Flask / Node.js / Django  
-- Verifies tokens and access rights  
+- Stack: Fast API 
+- Verifies tokens and access rights
+- Notifies user of status. 
 
-**Web Dashboard**  
-- Displays access requests in real-time using HTML/JS or React
 
 ## 8. Data Flow Diagram (Description)
 The user app sends BLE credentials to ESP32, which makes an HTTP request to the server. The server checks validity and updates a web dashboard.
 
 ## 9. Prototyping Setup
-Components include BLE phone app, ESP32 dev board, local Flask/Node.js server, and a localhost dashboard.
+Components include BLE phone app, ESP32 dev board, local FASTApi server, and a localhost dashboard.
 
 ## 10. Stretch Features
 - Geo-fencing via GPS or beacon triangulation  
