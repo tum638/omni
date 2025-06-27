@@ -1,5 +1,6 @@
 #include <WiFiS3.h>
 #include <ArduinoBLE.h>
+#include <ArduinoHttpClient.h>
 
 #define SVC_UUID  "19B10000-E8F2-537E-4F6C-D104768A1214"
 #define CHR_UUID  "19B10001-E8F2-537E-4F6C-D104768A1214"
@@ -7,9 +8,19 @@
 BLEService provService(SVC_UUID);
 BLEStringCharacteristic credChar(CHR_UUID, BLEWrite, 96);
 
+String clientId = "";
+String deviceId = "";
+
 // Fallback Wi-Fi credentials if BLE hasn't sent anything yet
 String wifiSSID = "4466784";
 String wifiPASS = "tanatswa";
+
+char serverAddress[] = "172.20.10.2";
+int serverPort = 8000;
+
+WiFiClient wifiClient;
+HttpClient httpClient(wifiClient, serverAddress, serverPort);
+
 
 unsigned long lastStatus = 0;
 
@@ -55,14 +66,17 @@ void loop() {
         String json = credChar.value();
         Serial.print("Got JSON: "); Serial.println(json);
 
-        int u1 = json.indexOf("\"u\":\"");
-        int p1 = json.indexOf("\"p\":\"");
-        if (u1 >= 0 && p1 >= 0) {
-          wifiSSID = json.substring(u1 + 5, json.indexOf('"', u1 + 5));
-          wifiPASS = json.substring(p1 + 5, json.indexOf('"', p1 + 5));
-          Serial.print("→ Parsed SSID: "); Serial.println(wifiSSID);
-          Serial.print("→ Parsed PASS: "); Serial.println(wifiPASS);
-          connectToWiFi();  // reconnect with new creds
+        int c1 = json.indexOf("\"client_id\":\"");
+        int d1 = json.indexOf("\"device_id\":\"");
+        if (c1 >= 0 && d1 >= 0) {
+          clientId = json.substring(c1 + 13, json.indexOf('"', c1 + 13));
+          deviceId = json.substring(d1 + 13, json.indexOf('"', d1 + 13));
+
+          Serial.println("→ Parsed Client ID: " + clientId);
+          Serial.println("→ Parsed Device ID: " + deviceId);
+
+          connectToWiFi();
+          sendToServer();
         }
       }
     }
@@ -98,4 +112,26 @@ void connectToWiFi() {
   } else {
     Serial.println("❌ WiFi Failed");
   }
+}
+
+void sendToServer() {
+  Serial.println("📡 Sending device identity to server...");
+
+  String payload = "{";
+  payload += "\"client_id\":\"" + clientId + "\",";
+  payload += "\"device_id\":\"" + deviceId + "\"}";
+  
+  httpClient.beginRequest();
+  httpClient.post("/verify-access");  // adjust path if needed
+  httpClient.sendHeader("Content-Type", "application/json");
+  httpClient.sendHeader("Content-Length", payload.length());
+  httpClient.beginBody();
+  httpClient.print(payload);
+  httpClient.endRequest();
+
+  int statusCode = httpClient.responseStatusCode();
+  String response = httpClient.responseBody();
+
+  Serial.print("✅ Server status: "); Serial.println(statusCode);
+  Serial.print("📨 Server response: "); Serial.println(response);
 }
